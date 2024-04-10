@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resizable Windows with Draggable Headers and Close Button</title>
+<style>
+  .window {
+    width: 200px;
+    min-width: 100px;
+    height: 150px;
+    min-height: 100px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    position: absolute;
+    display: block; /* Initially visible */
+    overflow: hidden;
+  }
+  .window-header {
+    width: calc(100% - 8px);
+    height: 20px;
+    background-color: #ccc;
+    cursor: move;
+    padding: 4px;
+    position: relative;
+  }
+  .window-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px;
+    cursor: pointer;
+  }
+  .window-content {
+    padding: 20px;
+    overflow: auto;
+  }
+  .resize-handle {
+    width: 16px;
+    height: 16px;
+    background-color: #333;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+  }
+</style>
+</head>
+<body>
+
+<div id="window1" class="window" style="top: 50px; left: 50px;">
+  <div class="window-header" onmousedown="startDragging(event, 'window1')">
+    Window 1
+    <span class="window-close" onclick="closeWindow('window1')">X</span>
+  </div>
+  <div class="window-content">
+    <h2>Window 1</h2>
+    <button onclick="alert('Button clicked in Window 1')">Click Me</button>
+  </div>
+  <div class="resize-handle" onmousedown="startResizing(event, 'window1')"></div>
+</div>
+
+<div id="window2" class="window" style="top: 150px; left: 150px;">
+  <div class="window-header" onmousedown="startDragging(event, 'window2')">
+    Window 2
+    <span class="window-close" onclick="closeWindow('window2')">X</span>
+  </div>
+  <div class="window-content">
+    <h2>Window 2</h2>
+    <button onclick="alert('Button clicked in Window 2')">Click Me</button>
+  </div>
+  <div class="resize-handle" onmousedown="startResizing(event, 'window2')"></div>
+</div>
+
+<script>
+  // Function to toggle visibility of windows
+  function toggleVisibility(windowId) {
+    var window = document.getElementById(windowId);
+    if (window.style.display === "none") {
+      window.style.display = "block";
+    } else {
+      window.style.display = "none";
+    }
+  }
+
+  // Function to start dragging the window
+  function startDragging(e, windowId) {
+    var window = document.getElementById(windowId);
+    var offsetX = e.clientX - window.offsetLeft;
+    var offsetY = e.clientY - window.offsetTop;
+
+    function drag(e) {
+      window.style.left = (e.clientX - offsetX) + "px";
+      window.style.top = (e.clientY - offsetY) + "px";
+    }
+
+    function stopDragging() {
+      window.removeEventListener('mousemove', drag);
+      window.removeEventListener('mouseup', stopDragging);
+    }
+
+    window.addEventListener('mousemove', drag);
+    window.addEventListener('mouseup', stopDragging);
+  }
+
+  // Function to start resizing the window
+  function startResizing(e, windowId) {
+    var window = document.getElementById(windowId);
+    var initialWidth = window.offsetWidth;
+    var initialHeight = window.offsetHeight;
+    var startX = e.clientX;
+    var startY = e.clientY;
+
+    function resize(e) {
+      var newWidth = initialWidth + (e.clientX - startX);
+      var newHeight = initialHeight + (e.clientY - startY);
+      window.style.width = newWidth + 'px';
+      window.style.height = newHeight + 'px';
+    }
+
+    function stopResizing() {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResizing);
+    }
+
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResizing);
+  }
+
+  // Function to close the window
+  function closeWindow(windowId) {
+    var window = document.getElementById(windowId);
+    window.style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

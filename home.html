@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        body {
+            height: 100vh; /* Set the body height to 100% of the viewport height */
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+            background-image: var(--bg-image, url('media/img/back.jpg')); /* Use CSS variable for background image */
+            background-size: cover; /* Make the background image cover the entire viewport */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            background-position: center; /* Center the background image */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+        /* Added CSS for the border */
+        #warnwipe {
+            border: 2px solid white;
+            padding: 10px; /* Optional: Add padding for better appearance */
+            display: none; /* Hide by default */
+            text-align: center; /* Center align the content */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            -webkit-backdrop-filter: blur(5px); /* Apply backdrop filter for blur effect (WebKit) */
+            backdrop-filter: blur(5px); /* Apply backdrop filter for blur effect */
+            border-radius: 10px; /* Rounded corners */
+        }
+        /* Style for image button */
+        #start img {
+            width: 36px; /* Adjust image width */
+            height: auto; /* Maintain aspect ratio */
+            transition: width 0.3s ease; /* Smooth transition for width change */
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)); /* Add drop shadow */
+        }
+        #toggleButton img,
+        #browse img,
+        #messenger img, #manual img, #filemanage img {
+            width: 20px; /* Adjust image width */
+            height: auto; /* Maintain aspect ratio */
+            transition: width 0.3s ease; /* Smooth transition for width change */
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)); /* Add drop shadow */
+        }
+        #top {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* Apply backdrop filter for blur effect */
+            padding: 10px; /* Add padding */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Add a subtle border */
+        }
+        /* Added hover effect */
+        button:not(#start):hover img {
+            width: 30px;
+        }
+
+        /* Start menu styling */
+        #startMenu {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid rgba(0, 0, 0, 0.2); /* Add a subtle border */
+            padding: 10px;
+            display: none;
+            z-index: 999; /* Ensure start menu appears on top */
+            backdrop-filter: blur(5px); /* Apply backdrop filter for blur effect */
+            border-radius: 10px; /* Rounded corners */
+        }
+        #startMenu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #startMenu ul li {
+            margin-bottom: 5px;
+        }
+        .h1, .h2, .h3, .h4, .h5, .h6, .p, .button {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+
+        /* Added CSS for button hover */
+        button:hover {
+            cursor: pointer;
+        }
+        #clock {
+            color: black;
+            font-size: 18px;
+        }
+        /* Draggable windows */
+        .window {
+            width: 1280px;
+            min-width: 100px;
+            height: 720px;
+            min-height: 100px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid rgba(0, 0, 0, 0.2); /* Add a subtle border */
+            position: absolute;
+            display: none; /* Initially hidden */
+            overflow: hidden;
+            backdrop-filter: blur(5px); /* Apply backdrop filter for blur effect */
+            border-radius: 10px; /* Rounded corners */
+        }
+        .helpwindow {
+            width: 550px;
+            min-width: 100px;
+            height: 461px;
+            min-height: 100px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid rgba(0, 0, 0, 0.2); /* Add a subtle border */
+            position: absolute;
+            display: block; /* Initially hidden */
+            overflow: hidden;
+            backdrop-filter: blur(5px); /* Apply backdrop filter for blur effect */
+            border-radius: 10px; /* Rounded corners */
+        }
+        .window-header {
+            width: calc(100% - 8px);
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            cursor: move;
+            padding: 4px;
+            position: relative;
+        }
+        .window-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .window-content {
+            padding: 20px;
+            overflow: auto;
+        }
+        .resize-handle {
+            width: 16px;
+            height: 16px;
+            background-color: #333;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: nwse-resize;
+        }
+    </style>
+</head>
+<body>
+    <div id="top">
+        <!-- Image button -->
+        <button id="start"><img src="media/img/logo.png" alt="Logo"></button>
+        <!-- Regular button -->
+        <button id="toggleButton"><img src="media/img/wipe.png" alt="Wipe"></button>
+        <!-- Browse -->
+        <button id="browse" onclick="openWindow('window1')"><img src="media/img/browse.png" alt="Browse"></button>
+        <!-- Messenger -->
+        <button id="messenger"><img src="media/img/messenger.png" alt="Messenger"></button>
+        <!-- Manual -->
+        <button id="manual" onclick="openWindow('window2')"><img src="media/img/infomation.png" alt="Manual"></button>
+        <!-- File Manager -->
+        <button id="filemanage" onclick="openWindow('window4')"><img src="media/img/files.png" alt="File Manager"></button>
+
+    </div>
+    <div id="warnwipe">
+        <h2>Are You Sure?</h2>
+        <p>Click the Wipe button again to cancel this action</p>
+        <p>Wiping this device is an irreversible action meaning you can't revert this. All data including contacts, browsing history, accounts, etc. saved on this device will be permanently deleted.</p>
+        <a href="wiped.html"><button>Yes, Wipe This Device</button></a>
+    </div>
+    <!-- Start menu -->
+    <div id="startMenu">
+        <p>Athena Version: Schön (1.0)</p>
+        <div id="clock"></div>
+        <br>
+        <ul>
+            <input type="file" id="bgImageInput">
+            <br>
+        </ul>
+    </div>
+
+<div id="window1" class="window">
+    <div class="window-header" onmousedown="startDragging(event, 'window1')">
+        <img src="media/img/browse.png" width="15px">
+        Browser
+        <div class="window-close" onclick="closeWindow('window1')">X</div>
+    </div>
+    <div class="window-content">
+        <input type="text" id="url-input" placeholder="Enter URL or file path"> <!-- Added id attribute -->
+        <button onclick="loadURL()">Load</button>
+        <div id="websitecontents">
+            <iframe id="website-frame" width="1280px" height="720px"></iframe>
+        </div>
+    </div>
+    <div class="resize-handle" onmousedown="startResizing(event, 'window1')"></div>
+</div>
+
+<div id="window3" class="window">
+    <div class="window-header" onmousedown="startDragging(event, 'window2')">
+        <img src="media/img/" width="15px">
+        Program Manager
+        <div class="window-close" onclick="closeWindow('window3')">X</div>
+    </div>
+    <div class="window-content">
+        <h1>Athena Manual</h1>
+        <p>Table of contents</p>
+        <ul>
+            <li>
+                Updates
+            </li>
+            <li>
+                Features
+            </li>
+            <li>
+                How to use
+            </li>
+        </ul>
+    </div>
+    <div class="resize-handle" onmousedown="startResizing(event, 'window2')"></div>
+    </div>
+    
+<div id="window2" class="helpwindow">
+    <div class="window-header" onmousedown="startDragging(event, 'window2')">
+        <img src="media/img/infomation.png" width="15px">
+        Infomation/Manual on Athena
+        <div class="window-close" onclick="closeWindow('window2')">X</div>
+    </div>
+    <div class="window-content">
+        <h1>Athena Manual</h1>
+        <p>Table of contents</p>
+        <ul>
+            <li>
+                Updates
+            </li>
+            <li>
+                Features
+            </li>
+            <li>
+                How to use
+            </li>
+        </ul>
+    </div>
+    <div class="resize-handle" onmousedown="startResizing(event, 'window2')"></div>
+    </div>
+
+    <script>
+function loadURL() {
+    var inputUrl = document.getElementById("url-input").value;
+    var iframe = document.getElementById("website-frame");
+    if (inputUrl.startsWith('http://') || inputUrl.startsWith('https://')) {
+        iframe.src = inputUrl;
+    } else {
+        // If the input is not a valid URL, assume it's a search query and navigate to Google
+        iframe.src = 'https://www.google.com/search?q=' + encodeURIComponent(inputUrl);
+    }
+}
+
+        // Toggle start menu visibility
+        document.getElementById('start').addEventListener('click', function() {
+            var startMenuDiv = document.getElementById('startMenu');
+            if (startMenuDiv.style.display === 'none') {
+                startMenuDiv.style.display = 'block';
+            } else {
+                startMenuDiv.style.display = 'none';
+            }
+        });
+
+        // Toggle warning message visibility
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            var warnwipeDiv = document.getElementById('warnwipe');
+            if (warnwipeDiv.style.display === 'none') {
+                warnwipeDiv.style.display = 'block';
+            } else {
+                warnwipeDiv.style.display = 'none';
+            }
+        });
+
+        // Update background image dynamically
+        document.getElementById('bgImageInput').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.body.style.setProperty('--bg-image', 'url(' + e.target.result + ')');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Update clock
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            // Add leading zeros if needed
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            var timeString = hours + ":" + minutes + ":" + seconds;
+            document.getElementById('clock').textContent = timeString;
+        }
+
+        // Update clock every second
+        setInterval(updateClock, 1000);
+
+        // Function to start dragging the window
+        function startDragging(e, windowId) {
+            var window = document.getElementById(windowId);
+            var offsetX = e.clientX - window.offsetLeft;
+            var offsetY = e.clientY - window.offsetTop;
+
+            function drag(e) {
+                window.style.left = (e.clientX - offsetX) + "px";
+                window.style.top = (e.clientY - offsetY) + "px";
+            }
+
+            function stopDragging() {
+                window.removeEventListener('mousemove', drag);
+                window.removeEventListener('mouseup', stopDragging);
+            }
+
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', stopDragging);
+        }
+
+        // Function to start resizing the window
+        function startResizing(e, windowId) {
+            var window = document.getElementById(windowId);
+            var initialWidth = window.offsetWidth;
+            var initialHeight = window.offsetHeight;
+            var startX = e.clientX;
+            var startY = e.clientY;
+
+            function resize(e) {
+                var newWidth = initialWidth + (e.clientX - startX);
+                var newHeight = initialHeight + (e.clientY - startY);
+                window.style.width = newWidth + 'px';
+                window.style.height = newHeight + 'px';
+            }
+
+            function stopResizing() {
+                window.removeEventListener('mousemove', resize);
+                window.removeEventListener('mouseup', stopResizing);
+            }
+
+            window.addEventListener('mousemove', resize);
+            window.addEventListener('mouseup', stopResizing);
+        }
+
+        // Function to close the window
+        function closeWindow(windowId) {
+            var window = document.getElementById(windowId);
+            window.style.display = 'none';
+        }
+
+        // Function to open the window
+        function openWindow(windowId) {
+            var window = document.getElementById(windowId);
+            window.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
